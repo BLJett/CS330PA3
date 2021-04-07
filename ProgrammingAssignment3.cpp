@@ -7,57 +7,55 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
-// Create a graph structure to hold the connections and nodes
-class Graph {
-	// Includes the data for each connection
-	class Connections {
-		// Contains the "C" character for connections
-		char connectionChar[200] = ""; 
-		// Contains the connection id
-		int connectionNumber[200] = { -1 };
-		// Contains the from node (start node) of a connection
-		int fromNode[200] = { -1 };
-		// Contains the to node (goal node) of a connection
-		int toNode[200] = { -1 };
-		// Contains the cost of the connection
-		int connectionCost[200] = { -1 }; 
-		// Contains the cost plot position
-		// **NOTE: For the plot, might be easier to ignore later by capturing now
-		int costPlotPosition[200] = { -1 }; 
-		// Contains the type of terrain 
-		// **NOTE: For the plot, might be easier to ignore later by capturing now
-		int typeOfTerrain[200] = { -1 };
-	};
+// Includes the data for each connection
+class Connections {
+	// Contains the "C" character for connections
+	string connectionChar[200] = { "" };
+	// Contains the connection id
+	int connectionNumber[200] = { -1 };
+	// Contains the from node (start node) of a connection
+	int fromNode[200] = { -1 };
+	// Contains the to node (goal node) of a connection
+	int toNode[200] = { -1 };
+	// Contains the cost of the connection
+	int connectionCost[200] = { -1 }; 
+	// Contains the cost plot position
+	// **NOTE: For the plot, might be easier to ignore later by capturing now
+	int costPlotPosition[200] = { -1 }; 
+	// Contains the type of terrain 
+	// **NOTE: For the plot, might be easier to ignore later by capturing now
+	int typeOfTerrain[200] = { -1 };
+};
 
-	// Includes the data for each node
-	class Nodes {
-		// Contains the "N" character for nodes
-		char nodeChar[200] = { "" };
-		// Contains the node id 
-		int nodeNumber[200] = { -1 };
-		// Contains the node status of 1=unvisited, 2=open, or 3=closed
-		int nodeStatus[200] = { -1 };
-		// Contains the cost-so-far sum from the from node to the current node
-		int nodeCostSoFar[200] = { -1 };
-		// Contains the estimated heuristics result from the euclidean distance formula
-		int estimatedHeuristics[200] = { -1 };
-		// Contains the estimated total cost result from all open nodes
-		int estimatedTotal[200] = { -1 }; 
-		// Contains the previous node in path 
-		int previousNode[200] = { -1 }; 
-		// Contains the x and y coordinates of the path
-		double xycoord[200][200] = { -1, -1 };
-		// Contains the number plot position
-		// **NOTE: For the plot, might be easier to ignore later by capturing now
-		int numberPlotPos[200] = { -1 };
-		// Contains the name plot position 
-		int namePlotPos[200] = { -1 }; 
-		// Contains the name of the place the node references
-		string nodeName[200] = { "" };
-	};
+// Includes the data for each node
+class Nodes {
+	// Contains the "N" character for nodes
+	char nodeChar[200] = { "" };
+	// Contains the node id 
+	int nodeNumber[200] = { -1 };
+	// Contains the node status of 1=unvisited, 2=open, or 3=closed
+	int nodeStatus[200] = { -1 };
+	// Contains the cost-so-far sum from the from node to the current node
+	int nodeCostSoFar[200] = { -1 };
+	// Contains the estimated heuristics result from the euclidean distance formula
+	int estimatedHeuristics[200] = { -1 };
+	// Contains the estimated total cost result from all open nodes
+	int estimatedTotal[200] = { -1 }; 
+	// Contains the previous node in path 
+	int previousNode[200] = { -1 }; 
+	// Contains the x and y coordinates of the path
+	double xycoord[200][200] = { -1, -1 };
+	// Contains the number plot position
+	// **NOTE: For the plot, might be easier to ignore later by capturing now
+	int numberPlotPos[200] = { -1 };
+	// Contains the name plot position 
+	int namePlotPos[200] = { -1 }; 
+	// Contains the name of the place the node references
+	string nodeName[200] = { "" };
 };
 
 // Loop through the array of nodes, update the lowestTotal to hold
@@ -102,11 +100,20 @@ int findPath()
 
 int main() 
 {
+	// Create an instance of connection 
+	Connections* connection = new Connections(); 
+
 	// Create a text string for line input
 	string line;
 
+	// Create a character string for getline
+	string charString = ""; 
+
 	// Input the file 
 	ifstream infile("CS 330, Pathfinding AB, Connections v3.txt");
+
+	// Set the iterator to 0 for index element
+	int i = 0; 
 
 	// Check to see if the input file failed to open
 	if (infile.fail())
@@ -115,7 +122,7 @@ int main()
 		cout << "Error with input file." << endl;
 
 		// Return 1 with error
-		return 1; 
+		return -1; 
 	}
 
 	// Retrieve each line of the file
@@ -123,6 +130,15 @@ int main()
 
 		// Erase the comments from the code that start with #
 		line.erase(std::find(line.begin(), line.end(), '#'), line.end());
+
+		// Using stringstream to operate on strings
+		stringstream linestream(line);
+		
+		// Retrieve the character column element
+		getline(linestream, charString, ',');
+
+		// Set the string to the appropriate element
+		connection->connectionChar[i] = charString; 
 
 		// Print out the line to the console
 		cout << line << endl;
