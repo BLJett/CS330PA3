@@ -1,7 +1,12 @@
 // Name: Brandon Luke Jett && Sierra Laney
+// Emails: blj0013@uah.edu & sel0010@uah.edu
+// Course: CS330-01
+// Program: A* Pathfinding
+// Purpose: Implement and test the A* pathfinding algorithm
 
 #include <iostream>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -32,7 +37,7 @@ int calculateDistanceBetweenNodes()
 // Return: ???
 int getConnections() // probably doesnt return an int, adjust as necessary
 {
-
+	return 0;
 }
 
 // Find path from start to end node by initializing a start node, finding
@@ -42,10 +47,27 @@ int getConnections() // probably doesnt return an int, adjust as necessary
 // Return: object???
 int findPath()
 {
-
+	return 0;
 }
 
 int main() 
 {
+	// Create a text string for line input
+	string line;
 
+	// Input the file 
+	ifstream infile("CS 330, Pathfinding AB, Connections v3.txt");
+
+	// Retrieve each line of the file
+	while (getline(infile, line)) {
+
+		// Erase the comments from the code that start with #
+		line.erase(std::find(line.begin(), line.end(), '#'), line.end());
+
+		// Print out the line to the console
+		cout << line << endl;
+	}
+
+	infile.close(); 
+	return 0;
 }
