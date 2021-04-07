@@ -108,14 +108,15 @@ int main()
 	// Create a text string for line input
 	string line;
 
-	// Create a character string for getline
-	string charString = ""; 
+	// Create a temporary string for getline
+	string temporary = ""; 
 
 	// Input the file 
 	ifstream infile("CS 330, Pathfinding AB, Connections v3.txt");
 
 	// Set the iterator to 0 for index element
 	int i = 0; 
+	int j = 0;
 
 	// Check to see if the input file failed to open
 	if (infile.fail())
@@ -139,8 +140,58 @@ int main()
 		// Retrieve the character column element
 		getline(linestream, connection->connectionChar[i], ',');
 
+		// Retrieve the connection number column element as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the connection number
+		connection->connectionNumber[i] = stoi(temporary); 
+
+		// Retrieve the from node column element as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the from node
+		connection->fromNode[i] = stoi(temporary);
+
+		// Retrieve the to node column element as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the to node
+		connection->toNode[i] = stoi(temporary);
+
+		// Retrieve the cost column element as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the cost
+		connection->connectionCost[i] = stoi(temporary);
+
+		// Retrieve the to cost plot position element as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the cost plot position
+		connection->costPlotPosition[i] = stoi(temporary);
+
+		// Retrieve the type of terrain column element as a string
+		getline(linestream, temporary);
+
+		// Change the string into an int for the to node
+		connection->typeOfTerrain[i] = stoi(temporary);
+
 		// Print out the line to the console
-		cout << line << endl;
+		// cout << line << endl;
+
+		// Increment iterator
+		i++; 
+	}
+
+	while (j<200) {
+		cout << connection->connectionChar[j]
+			<< connection->connectionNumber[j]
+			<< connection->fromNode[j]
+			<< connection->toNode[j]
+			<< connection->connectionCost[j]
+			<< connection->costPlotPosition[j]
+			<< connection->typeOfTerrain[j];
+		j++;
 	}
 
 	// Close the input file
