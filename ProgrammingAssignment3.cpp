@@ -13,6 +13,7 @@ using namespace std;
 
 // Includes the data for each connection
 class Connections {
+	public:
 	// Contains the "C" character for connections
 	string connectionChar[200] = { "" };
 	// Contains the connection id
@@ -33,6 +34,7 @@ class Connections {
 
 // Includes the data for each node
 class Nodes {
+	public: 
 	// Contains the "N" character for nodes
 	char nodeChar[200] = { "" };
 	// Contains the node id 
@@ -135,10 +137,7 @@ int main()
 		stringstream linestream(line);
 		
 		// Retrieve the character column element
-		getline(linestream, charString, ',');
-
-		// Set the string to the appropriate element
-		connection->connectionChar[i] = charString; 
+		getline(linestream, connection->connectionChar[i], ',');
 
 		// Print out the line to the console
 		cout << line << endl;
