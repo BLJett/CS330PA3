@@ -148,6 +148,7 @@ int main()
 
 	// Create a text string for line input
 	string line;
+	string testInput = " ";
 
 	// Create a temporary string for getline
 	string temporary = "";
@@ -282,7 +283,7 @@ int main()
 	while (getline(infile2, line)) {
 
 		// Erase the comments from the code that start with #
-		line.erase(std::find(line.begin(), line.end(), '#'), line.end());
+		//line.erase(std::find(line.begin(), line.end(), '#'), line.end());
 
 		// Using stringstream to operate on strings
 		stringstream linestream(line);
@@ -295,6 +296,12 @@ int main()
 
 		// Change the string into an int for the node number
 		node->nodeNumber[i] = stoi(temporary);
+
+		// Retrieve the node status column element as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the node number
+		node->nodeStatus[i] = stoi(temporary);
 
 		// Retrieve the cost so far as a string
 		getline(linestream, temporary, ',');
@@ -345,10 +352,8 @@ int main()
 		node->namePlotPos[i] = stoi(temporary);
 
 		// Retrieve the node name as a string
+		//getline(linestream, node->nodeName[i], ',');
 		getline(linestream, node->nodeName[i], ',');
-
-		// Print out the line to the console
-		cout << line << endl;
 
 		// Increment iterator
 		i++;
