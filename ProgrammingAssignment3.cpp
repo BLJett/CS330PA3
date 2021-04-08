@@ -107,27 +107,48 @@ public:
 // node in the array of nodes.
 // Params: Nodes node
 // Return: int, element of lowest cost node with lowest index
-int findLowestOpenNode(Nodes node)
+int findLowestOpenNode(Nodes *node)
 {
 	int lowestOpenNode = INT_MAX;
+	int lowestTotal = INT_MAX;
 
-	for (int i = 0; i < 153; i++)
+	for (int i = 0; i < 66; i++)
 	{
-		if(node.estimatedTotal[i] < lowestOpenNode)
-		lowestOpenNode = node.estimatedTotal[i];
+		if (node->nodeStatus[i] = OPEN && node->estimatedTotal[i] < lowestTotal)
+		{
+			lowestTotal = node->estimatedTotal[i];
+			lowestOpenNode = i;
+		}
 	}
-
 	return lowestOpenNode;
 }
 
 // Calculates the heuristic (in our case) the 
 // Euclidean distance between two given nodes
-// Params: 2 node objects
-// Return: int, distance between the two nodes
-int calculateDistanceBetweenNodes(Nodes node1, Nodes node2)
+// Params: pointer to a node object and the elements of the two nodes
+// Return: double, distance between the two nodes
+int calculateDistanceBetweenNodes(Nodes *node, int node1, int node2)
 {
-	double distance = sqrt((node2.xcoord - node1.xcoord)^2 + 
-							(node2.zcoord - node1.zcoord^2));
+	int xCoordNode2 = node->xcoord[node2];
+	int xCoordNode1 = node->xcoord[node1];
+	int zCoordNode2 = node->zcoord[node2];
+	int zCoordNode1 = node->zcoord[node1];
+
+
+	//double distance = sqrt((node->xcoord[node2] - node->xcoord[node1]) ^ 2 +
+	//	(node->zcoord[node2] - node->zcoord[node1]) ^ 2);
+	double distance = 0;
+	int distance1 = 0;
+	int distance2 = 0;
+
+	// Calculate the distance between the nodes, we have to do this
+	// in order to get the proper calculation, i dont know why
+	distance2 = (xCoordNode2 - xCoordNode1);
+	distance2 = distance2 * distance2;
+	distance1 = (zCoordNode2 - zCoordNode1);
+	distance1 = distance1 * distance1;
+	distance = distance2 + distance1;
+	distance = sqrt(distance);
 	return distance;
 }
 
@@ -135,7 +156,7 @@ int calculateDistanceBetweenNodes(Nodes node1, Nodes node2)
 // from the given node.
 // Params: Connection and node 
 // Return: Int array parameter
-float* getConnections(Connections connection, Nodes currentNode) 
+float* getConnections(Connections connection, Nodes currentNode)
 {
 	float result[8] = { UNDEFINED };
 	for (int i = 0; i < 153; i++)
@@ -394,6 +415,13 @@ int main()
 
 	infile2.close();
 	outfile.close();
+	//system("pause");
+
+	cout << endl << endl;
+
+	double testThingy = calculateDistanceBetweenNodes(node, 7, 8);
+	cout << testThingy << endl;
+
 	system("pause");
 
 	return 0;
