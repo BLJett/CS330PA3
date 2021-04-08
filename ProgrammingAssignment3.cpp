@@ -13,7 +13,7 @@ using namespace std;
 
 // Includes the data for each connection
 class Connections {
-	public:
+public:
 	// Contains the "C" character for connections
 	string connectionChar[200] = { "" };
 	// Contains the connection id
@@ -23,10 +23,10 @@ class Connections {
 	// Contains the to node (goal node) of a connection
 	int toNode[200] = { -1 };
 	// Contains the cost of the connection
-	int connectionCost[200] = { -1 }; 
+	int connectionCost[200] = { -1 };
 	// Contains the cost plot position
 	// **NOTE: For the plot, might be easier to ignore later by capturing now
-	int costPlotPosition[200] = { -1 }; 
+	int costPlotPosition[200] = { -1 };
 	// Contains the type of terrain 
 	// **NOTE: For the plot, might be easier to ignore later by capturing now
 	int typeOfTerrain[200] = { -1 };
@@ -34,7 +34,7 @@ class Connections {
 
 // Includes the data for each node
 class Nodes {
-	public: 
+public:
 	// Contains the "N" character for nodes
 	char nodeChar[200] = { "" };
 	// Contains the node id 
@@ -46,16 +46,16 @@ class Nodes {
 	// Contains the estimated heuristics result from the euclidean distance formula
 	int estimatedHeuristics[200] = { -1 };
 	// Contains the estimated total cost result from all open nodes
-	int estimatedTotal[200] = { -1 }; 
+	int estimatedTotal[200] = { -1 };
 	// Contains the previous node in path 
-	int previousNode[200] = { -1 }; 
+	int previousNode[200] = { -1 };
 	// Contains the x and y coordinates of the path
 	double xycoord[200][200] = { -1, -1 };
 	// Contains the number plot position
 	// **NOTE: For the plot, might be easier to ignore later by capturing now
 	int numberPlotPos[200] = { -1 };
 	// Contains the name plot position 
-	int namePlotPos[200] = { -1 }; 
+	int namePlotPos[200] = { -1 };
 	// Contains the name of the place the node references
 	string nodeName[200] = { "" };
 };
@@ -100,22 +100,26 @@ int findPath()
 	return 0;
 }
 
-int main() 
+int main()
 {
 	// Create an instance of connection 
-	Connections* connection = new Connections(); 
+	Connections* connection = new Connections();
 
 	// Create a text string for line input
 	string line;
 
 	// Create a temporary string for getline
-	string temporary = ""; 
+	string temporary = "";
 
 	// Input the file 
 	ifstream infile("CS 330, Pathfinding AB, Connections v3.txt");
 
+	// Create and populate the CSV textfile
+	ofstream outfile;
+	outfile.open("CS 330, Astar Connections Output.txt");
+
 	// Set the iterator to 0 for index element
-	int i = 0; 
+	int i = 0;
 	int j = 0;
 
 	// Check to see if the input file failed to open
@@ -125,7 +129,17 @@ int main()
 		cout << "Error with input file." << endl;
 
 		// Return 1 with error
-		return -1; 
+		return -1;
+	}
+
+	// Check to see if the output file failed to open
+	if (outfile.fail())
+	{
+		//Display error message to console
+		cout << "Error with output file." << endl;
+
+		// Return 1 with error
+		return -2;
 	}
 
 	// Retrieve each line of the file
@@ -136,7 +150,7 @@ int main()
 
 		// Using stringstream to operate on strings
 		stringstream linestream(line);
-		
+
 		// Retrieve the character column element
 		getline(linestream, connection->connectionChar[i], ',');
 
@@ -144,7 +158,7 @@ int main()
 		getline(linestream, temporary, ',');
 
 		// Change the string into an int for the connection number
-		connection->connectionNumber[i] = stoi(temporary); 
+		connection->connectionNumber[i] = stoi(temporary);
 
 		// Retrieve the from node column element as a string
 		getline(linestream, temporary, ',');
@@ -180,22 +194,24 @@ int main()
 		// cout << line << endl;
 
 		// Increment iterator
-		i++; 
+		i++;
 	}
 
 	while (j<200) {
-		cout << connection->connectionChar[j]
-			<< connection->connectionNumber[j]
-			<< connection->fromNode[j]
-			<< connection->toNode[j]
-			<< connection->connectionCost[j]
-			<< connection->costPlotPosition[j]
-			<< connection->typeOfTerrain[j];
+		outfile << connection->connectionChar[j] << ","
+			<< connection->connectionNumber[j] << ","
+			<< connection->fromNode[j] << ","
+			<< connection->toNode[j] << ","
+			<< connection->connectionCost[j] << ","
+			<< connection->costPlotPosition[j] << ","
+			<< connection->typeOfTerrain[j]
+			<< endl;
 		j++;
 	}
 
-	// Close the input file
-	infile.close(); 
+	// Close the input file and output file
+	infile.close();
+	outfile.close();
 
 	return 0;
 }
