@@ -13,7 +13,7 @@ using namespace std;
 
 // Constants needed used by pathfinding algorithms
 const int UNDEFINED = 0; 
-const int UNVISTED = 1; 
+const int UNVISITED = 1; 
 const int OPEN = 2; 
 const int CLOSED = 3;
 
@@ -87,8 +87,10 @@ public:
 	int estimatedTotal[200] = { -1 };
 	// Contains the previous node in path 
 	int previousNode[200] = { -1 };
-	// Contains the x and y coordinates of the path
-	double xzcoord[200][200] = { -1, -1 };
+	// Contains the x coordinates of the path
+	double xcoord[200] = { -1 };
+	// Contains the z coordinates of the path
+	double zcoord[200] = { -1 };
 	// Contains the number plot position
 	// **NOTE: For the plot, might be easier to ignore later by capturing now
 	int numberPlotPos[200] = { -1 };
@@ -96,36 +98,52 @@ public:
 	int namePlotPos[200] = { -1 };
 	// Contains the name of the place the node references
 	string nodeName[200] = { "" };
+	// 
+	int openNodes[200] = { UNDEFINED };
 };
 
 // Loop through the array of nodes, update the lowestTotal to hold
 // the lowest cost node so far until we find the lowest cost open
 // node in the array of nodes.
-// Params: Nodes node, Connection connection, int array openNodes
+// Params: Nodes node
 // Return: int, element of lowest  cost node with lowest index
-int findLowestOpenNode(Nodes node, Connections connection, int openNodes[100])
+int findLowestOpenNode(Nodes node)
 {
-	int lowestOpenNode = 0;
-	int lowestTotal = 0;
+	int lowestOpenNode = INT_MAX;
+
+	for (int i = 0; i < 153; i++)
+	{
+		if(node.estimatedTotal[i] < lowestOpenNode)
+		lowestOpenNode = node.estimatedTotal[i];
+	}
+
 	return lowestOpenNode;
 }
 
-// Calculates distance between two given nodes
-// Params: none
+// Calculates the heuristic (in our case) the 
+// Euclidean distance between two given nodes
+// Params: 2 node objects
 // Return: int, distance between the two nodes
-int calculateDistanceBetweenNodes()
+int calculateDistanceBetweenNodes(Nodes node1, Nodes node2)
 {
-	int distance = 0;
+	double distance = sqrt((node2.xcoord - node1.xcoord)^2 + 
+							(node2.zcoord - node1.zcoord^2));
 	return distance;
 }
 
 // Finds and returns a list of all outgoing connections
 // from the given node.
-// Params: none
-// Return: ???
-int getConnections() // probably doesnt return an int, adjust as necessary
+// Params: Connection and node 
+// Return: Int array parameter
+float* getConnections(Connections connection, Nodes currentNode) 
 {
-	return 0;
+	float result[8] = { UNDEFINED };
+	for (int i = 0; i < 153; i++)
+	{
+		if (connection.fromNode == currentNode.nodeNumber)
+			result[i] == connection.fromNode[i];
+	}
+	return result;
 }
 
 // Find path from start to end node by initializing a start node, finding
