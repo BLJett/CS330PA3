@@ -13,7 +13,7 @@ using namespace std;
 
 // Constants needed used by pathfinding algorithms
 const int UNDEFINED = 0;
-const int UNVISTED = 1;
+const int UNVISITED = 1;
 const int OPEN = 2;
 const int CLOSED = 3;
 
@@ -21,33 +21,33 @@ const int CLOSED = 3;
 // Constants start at 3 because first two columns loaded from input nodes file are not used by algorithms.
 
 // Status of node; UNVISITED, OPEN, or CLOSED
-const int STATUS = -3;
+const int STATUS = 3;
 // Cost of shortest path found so far to this node
-const int COSTSOFAR = -4;
+const int COSTSOFAR = 4;
 // Estimated heuristic cost
-const int HEURISTIC = -5;
+const int HEURISTIC = 5;
 // Estimated total cost 
-const int TOTAL = -6;
+const int TOTAL = 6;
 // Previous node in path from start to this node
-const int PREVIOUS = -7;
+const int PREVIOUS = 7;
 // Location(position) x coordinate
-const int LOCX = -8;
+const int LOCX = 8;
 // Location(position) z coordinate
-const int LOCZ = -9;
+const int LOCZ = 9;
 
 // Initialize constants used for indexes in graph connections data structure.
 // Constants start at 3 because first two columns loaded from input nodes file are not used by algorithms.
 
 // Connection from node number
-const int FROMNODE = -3;
+const int FROMNODE = 3;
 // Connection to node number
-const int TONODE = -4;
+const int TONODE = 4;
 // Connection cost
-const int COST = -5;
+const int COST = 5;
 // Estimated total cost
-const int COSTPOS = -6;
+const int COSTPOS = 6;
 // Previous node in path from start to this node
-const int TYPE = -7;
+const int TYPE = 7;
 
 // Includes the data for each connection
 class Connections {
@@ -98,36 +98,52 @@ public:
 	int namePlotPos[200] = { -1 };
 	// Contains the name of the place the node references
 	string nodeName[200] = { "" };
+	// 
+	int openNodes[200] = { UNDEFINED };
 };
 
 // Loop through the array of nodes, update the lowestTotal to hold
 // the lowest cost node so far until we find the lowest cost open
 // node in the array of nodes.
-// Params: Nodes node, Connection connection, int array openNodes
-// Return: int, element of lowest  cost node with lowest index
-int findLowestOpenNode(Nodes node, Connections connection, int openNodes[100])
+// Params: Nodes node
+// Return: int, element of lowest cost node with lowest index
+int findLowestOpenNode(Nodes node)
 {
-	int lowestOpenNode = 0;
-	int lowestTotal = 0;
+	int lowestOpenNode = INT_MAX;
+
+	for (int i = 0; i < 153; i++)
+	{
+		if(node.estimatedTotal[i] < lowestOpenNode)
+		lowestOpenNode = node.estimatedTotal[i];
+	}
+
 	return lowestOpenNode;
 }
 
-// Calculates distance between two given nodes
-// Params: none
+// Calculates the heuristic (in our case) the 
+// Euclidean distance between two given nodes
+// Params: 2 node objects
 // Return: int, distance between the two nodes
-int calculateDistanceBetweenNodes()
+int calculateDistanceBetweenNodes(Nodes node1, Nodes node2)
 {
-	int distance = 0;
+	double distance = sqrt((node2.xcoord - node1.xcoord)^2 + 
+							(node2.zcoord - node1.zcoord^2));
 	return distance;
 }
 
 // Finds and returns a list of all outgoing connections
 // from the given node.
-// Params: none
-// Return: ???
-int getConnections() // probably doesnt return an int, adjust as necessary
+// Params: Connection and node 
+// Return: Int array parameter
+float* getConnections(Connections connection, Nodes currentNode) 
 {
-	return 0;
+	float result[8] = { UNDEFINED };
+	for (int i = 0; i < 153; i++)
+	{
+		if (connection.fromNode == currentNode.nodeNumber)
+			result[i] == connection.fromNode[i];
+	}
+	return result;
 }
 
 // Find path from start to end node by initializing a start node, finding
