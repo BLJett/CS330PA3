@@ -12,9 +12,9 @@
 using namespace std;
 
 // Constants needed used by pathfinding algorithms
-const int UNDEFINED = 0; 
-const int UNVISITED = 1; 
-const int OPEN = 2; 
+const int UNDEFINED = 0;
+const int UNVISITED = 1;
+const int OPEN = 2;
 const int CLOSED = 3;
 
 // Initialize constants used for indexes in graph nodes data structure.
@@ -74,7 +74,7 @@ public:
 class Nodes {
 public:
 	// Contains the "N" character for nodes
-	char nodeChar[200] = { "" };
+	string nodeChar[200] = { "" };
 	// Contains the node id 
 	int nodeNumber[200] = { -1 };
 	// Contains the node status of 1=unvisited, 2=open, or 3=closed
@@ -106,7 +106,7 @@ public:
 // the lowest cost node so far until we find the lowest cost open
 // node in the array of nodes.
 // Params: Nodes node
-// Return: int, element of lowest  cost node with lowest index
+// Return: int, element of lowest cost node with lowest index
 int findLowestOpenNode(Nodes node)
 {
 	int lowestOpenNode = INT_MAX;
@@ -160,12 +160,18 @@ int main()
 {
 	// Create an instance of connection 
 	Connections* connection = new Connections();
+	Nodes* node = new Nodes();
 
 	// Create a text string for line input
 	string line;
+	string testInput = " ";
 
 	// Create a temporary string for getline
 	string temporary = "";
+
+	//****************************************************
+	// Get input and output for the CONNECTIONS
+	//****************************************************
 
 	// Input the file 
 	ifstream infile("CS 330, Pathfinding AB, Connections v3.txt");
@@ -265,9 +271,130 @@ int main()
 		j++;
 	}
 
-	// Close the input file and output file
+	// Close the connections input file
 	infile.close();
+	//outfile.close(); // I am pretty sure we want to only close this after we have done the nodes as well
+
+	//****************************************************
+	// Get input and output for the NODES
+	//****************************************************
+
+	// Input the file 
+	ifstream infile2("CS 330, Pathfinding AB, Nodes v3.txt");
+
+	i = 0;
+	j = 0;
+
+	// Check to see if the input file failed to open
+	if (infile2.fail())
+	{
+		//Display error message to console
+		cout << "Error with input file." << endl;
+
+		// Return 1 with error
+		return -3;
+	}
+
+	// Retrieve each line of the file
+	while (getline(infile2, line)) {
+
+		// Erase the comments from the code that start with #
+		//line.erase(std::find(line.begin(), line.end(), '#'), line.end());
+
+		// Using stringstream to operate on strings
+		stringstream linestream(line);
+
+		// Retrieve the character column element
+		getline(linestream, node->nodeChar[i], ',');
+
+		// Retrieve the node number column element as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the node number
+		node->nodeNumber[i] = stoi(temporary);
+
+		// Retrieve the node status column element as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the node number
+		node->nodeStatus[i] = stoi(temporary);
+
+		// Retrieve the cost so far as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the cost so far
+		node->nodeCostSoFar[i] = stoi(temporary);
+
+		// Retrieve the estimated heuristic as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the estimated heuristic
+		node->estimatedHeuristics[i] = stoi(temporary);
+
+		// Retrieve the estimated total as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the estimated total
+		node->estimatedTotal[i] = stoi(temporary);
+
+		// Retrieve the estimated previous node in path
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the previous node in path
+		node->previousNode[i] = stoi(temporary);
+
+		// Retrieve the location x as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the location x
+		node->xcoord[i] = stoi(temporary);
+
+		// Retrieve the location z as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the location z
+		node->zcoord[i] = stoi(temporary);
+
+		// Retrieve the number plot position as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the number plot position
+		node->numberPlotPos[i] = stoi(temporary);
+
+		// Retrieve the name plot position as a string
+		getline(linestream, temporary, ',');
+
+		// Change the string into an int for the name plot position
+		node->namePlotPos[i] = stoi(temporary);
+
+		// Retrieve the node name as a string
+		//getline(linestream, node->nodeName[i], ',');
+		getline(linestream, node->nodeName[i], ',');
+
+		// Increment iterator
+		i++;
+	}
+
+	while (j<200) {
+		cout << node->nodeChar[j] << ","
+			<< node->nodeNumber[j] << ","
+			<< node->nodeStatus[j] << ","
+			<< node->nodeCostSoFar[j] << ","
+			<< node->estimatedHeuristics[j] << ","
+			<< node->estimatedTotal[j] << ","
+			<< node->previousNode[j] << ","
+			<< node->xcoord[j] << ","
+			<< node->zcoord[j] << ","
+			<< node->numberPlotPos[j] << ","
+			<< node->namePlotPos[j] << ","
+			<< node->nodeName[j]
+			<< endl;
+		j++;
+	}
+
+	infile2.close();
 	outfile.close();
+	system("pause");
 
 	return 0;
 }
