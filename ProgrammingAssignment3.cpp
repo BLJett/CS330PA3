@@ -11,6 +11,44 @@
 
 using namespace std;
 
+// Constants needed used by pathfinding algorithms
+const int UNDEFINED = 0; 
+const int UNVISTED = 1; 
+const int OPEN = 2; 
+const int CLOSED = 3;
+
+// Initialize constants used for indexes in graph nodes data structure.
+// Constants start at 3 because first two columns loaded from input nodes file are not used by algorithms.
+
+// Status of node; UNVISITED, OPEN, or CLOSED
+const int STATUS = -3;
+// Cost of shortest path found so far to this node
+const int COSTSOFAR = -4;
+// Estimated heuristic cost
+const int HEURISTIC = -5;
+// Estimated total cost 
+const int TOTAL = -6;
+// Previous node in path from start to this node
+const int PREVIOUS = -7;
+// Location(position) x coordinate
+const int LOCX = -8;
+// Location(position) z coordinate
+const int LOCZ = -9;
+
+// Initialize constants used for indexes in graph connections data structure.
+// Constants start at 3 because first two columns loaded from input nodes file are not used by algorithms.
+
+// Connection from node number
+const int FROMNODE = -3;
+// Connection to node number
+const int TONODE = -4;
+// Connection cost
+const int COST = -5;
+// Estimated total cost
+const int COSTPOS = -6;
+// Previous node in path from start to this node
+const int TYPE = -7;
+
 // Includes the data for each connection
 class Connections {
 public:
@@ -50,7 +88,7 @@ public:
 	// Contains the previous node in path 
 	int previousNode[200] = { -1 };
 	// Contains the x and y coordinates of the path
-	double xycoord[200][200] = { -1, -1 };
+	double xzcoord[200][200] = { -1, -1 };
 	// Contains the number plot position
 	// **NOTE: For the plot, might be easier to ignore later by capturing now
 	int numberPlotPos[200] = { -1 };
@@ -63,9 +101,9 @@ public:
 // Loop through the array of nodes, update the lowestTotal to hold
 // the lowest cost node so far until we find the lowest cost open
 // node in the array of nodes.
-// Params: none
+// Params: Nodes node, Connection connection, int array openNodes
 // Return: int, element of lowest  cost node with lowest index
-int findLowestOpenNode()
+int findLowestOpenNode(Nodes node, Connections connection, int openNodes[100])
 {
 	int lowestOpenNode = 0;
 	int lowestTotal = 0;
