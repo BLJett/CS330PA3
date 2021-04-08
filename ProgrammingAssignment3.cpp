@@ -21,33 +21,33 @@ const int CLOSED = 3;
 // Constants start at 3 because first two columns loaded from input nodes file are not used by algorithms.
 
 // Status of node; UNVISITED, OPEN, or CLOSED
-const int STATUS = -3;
+const int STATUS = 3;
 // Cost of shortest path found so far to this node
-const int COSTSOFAR = -4;
+const int COSTSOFAR = 4;
 // Estimated heuristic cost
-const int HEURISTIC = -5;
+const int HEURISTIC = 5;
 // Estimated total cost 
-const int TOTAL = -6;
+const int TOTAL = 6;
 // Previous node in path from start to this node
-const int PREVIOUS = -7;
+const int PREVIOUS = 7;
 // Location(position) x coordinate
-const int LOCX = -8;
+const int LOCX = 8;
 // Location(position) z coordinate
-const int LOCZ = -9;
+const int LOCZ = 9;
 
 // Initialize constants used for indexes in graph connections data structure.
 // Constants start at 3 because first two columns loaded from input nodes file are not used by algorithms.
 
 // Connection from node number
-const int FROMNODE = -3;
+const int FROMNODE = 3;
 // Connection to node number
-const int TONODE = -4;
+const int TONODE = 4;
 // Connection cost
-const int COST = -5;
+const int COST = 5;
 // Estimated total cost
-const int COSTPOS = -6;
+const int COSTPOS = 6;
 // Previous node in path from start to this node
-const int TYPE = -7;
+const int TYPE = 7;
 
 // Includes the data for each connection
 class Connections {
