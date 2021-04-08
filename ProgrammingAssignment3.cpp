@@ -149,10 +149,52 @@ float* getConnections(Connections connection, Nodes currentNode)
 // Find path from start to end node by initializing a start node, finding
 // all outgoing connections, picking the lowest outgoing connection and taking it.
 // We return an updated version of the graph 
-// Params: none
-// Return: object???
-int findPath()
+// Params: connection object, node object, start node, goal note
+// Return: updated graph? (connections and nodes)
+int findPath(Connections connection, Nodes node, int startNode, int goalNode)
 {
+	// Setting the initial values unvisited, infinity, and undefined to status,
+	// cost so far, and previous; setting the iterator
+	int j = 0; 
+	int k = 0; 
+	int currentNode = UNDEFINED;
+	
+	for (int i = 0; i < 66; i++)
+	{
+		node.nodeStatus[i] = UNVISITED;
+		node.nodeCostSoFar[i] = INFINITY;
+		node.previousNode[i] = UNDEFINED;
+	}
+
+	// Initialize the start node as open 
+	node.nodeStatus[startNode] = OPEN; 
+	node.nodeCostSoFar[startNode] = 0; 
+	
+	// Set the first element of the array to the start node
+	node.openNodes[startNode]; 
+
+	// Check to see if there are any nodes set to open 
+	while (j < 66)
+	{
+		// If yes, set the counter to j 
+		if (node.nodeStatus[j] == OPEN)
+		{
+			j++;
+		}
+	}
+
+	while (k < j)
+	{
+		currentNode = findLowestOpenNode(node);
+
+		if (currentNode == goalNode)
+			break;
+
+
+		k++;
+	}
+
+
 	return 0;
 }
 
@@ -312,7 +354,7 @@ int main()
 
 		// Change the string into an int for the node number
 		node->nodeNumber[i] = stoi(temporary);
-
+		
 		// Retrieve the node status column element as a string
 		getline(linestream, temporary, ',');
 
