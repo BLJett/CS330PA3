@@ -107,7 +107,7 @@ public:
 // node in the array of nodes.
 // Params: Nodes node
 // Return: int, element of lowest cost node with lowest index
-int findLowestOpenNode(Nodes* node)
+int findLowestOpenNode(Nodes *node)
 {
 	int lowestOpenNode = INT_MAX;
 	int lowestTotal = INT_MAX;
@@ -127,7 +127,7 @@ int findLowestOpenNode(Nodes* node)
 // Euclidean distance between two given nodes
 // Params: pointer to a node object and the elements of the two nodes
 // Return: double, distance between the two nodes
-int calculateDistanceBetweenNodes(Nodes* node, int node1, int node2)
+int calculateDistanceBetweenNodes(Nodes *node, int node1, int node2)
 {
 	int xCoordNode2 = node->xcoord[node2];
 	int xCoordNode1 = node->xcoord[node1];
