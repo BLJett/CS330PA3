@@ -508,44 +508,48 @@ int main()
 		j++;
 	}
 
-
-	//// referencing node number 2, 8, 10 
-	//node->nodeStatus[2] = 2;
-	//node->nodeStatus[8] = 2;
-	//node->nodeStatus[10] = 2;
-
-	//node->estimatedTotal[2] = 200;
-	//node->estimatedTotal[8] = 10;
-	//node->estimatedTotal[10] = 400;
-
-	//vector <int> openNodeIndex;
-
-	//openNodeIndex.push_back(2);
-	//openNodeIndex.push_back(8);
-	//openNodeIndex.push_back(10);
-
-	//// result is from 2, 8, 10
-	//cout << findLowestOpenNode(node, openNodeIndex) << endl;
-	//cout << calculateDistanceBetweenNodes(node, 1, 7) << endl;
-
-	//vector <int> connectionResult = getConnections(connection, 47);
-
-	//for (int i = 0; i < connectionResult.size(); i++)
-	//{
-	//	cout << connectionResult.operator[](i) << endl;
-	//}
-
-	// cout << findPath(connection, node, 1, 2);
-
 	infile2.close();
 	outfile.close();
+
+	findPath(connection, node, 0, 22);
+	path = retrievePath(node, 0, 22);
+	cout << endl << endl;
+	for (i = 0; i < path.size(); i++)
+	{
+		cout << path.operator[](i) + 1 << " ";
+	}
+
+	findPath(connection, node, 0, 58);
+	path = retrievePath(node, 0, 58);
+	cout << endl << endl;
+	for (i = 0; i < path.size(); i++)
+	{
+		cout << path.operator[](i) + 1 << " ";
+	}
 
 	findPath(connection, node, 7, 57);
 	path = retrievePath(node, 7, 57);
 	cout << endl << endl;
-	for (i = 0; path.size() - 1; i++)
+	for (i = 0; i < path.size(); i++)
 	{
-		cout << path.operator[](i) << endl;
+		cout << path.operator[](i) + 1 << " ";
+	}
+
+	findPath(connection, node, 8, 64);
+	path = retrievePath(node, 8, 64);
+	cout << endl << endl;
+	for (i = 0; i < path.size(); i++)
+	{
+		cout << path.operator[](i) + 1 << " ";
+	}
+
+	findPath(connection, node, 26, 32);
+	path = retrievePath(node, 26, 32);
+	cout << endl << endl;
+
+	for (i = 0; i < path.size(); i++)
+	{
+		cout << path.operator[](i) + 1 << " ";
 	}
 	
 
