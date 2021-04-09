@@ -16,6 +16,8 @@ const int UNDEFINED = 0;
 const int UNVISITED = 1;
 const int OPEN = 2;
 const int CLOSED = 3;
+const int CONNECTIONSNUM = 153;
+const int NODESNUM = 66;
 
 // Initialize constants used for indexes in graph nodes data structure.
 // Constants start at 3 because first two columns loaded from input nodes file are not used by algorithms.
@@ -53,53 +55,53 @@ const int TYPE = 7;
 class Connections {
 public:
 	// Contains the "C" character for connections
-	string connectionChar[200] = { "" };
+	string connectionChar[CONNECTIONSNUM] = { "" };
 	// Contains the connection id
-	int connectionNumber[200] = { -1 };
+	int connectionNumber[CONNECTIONSNUM] = { -1 };
 	// Contains the from node (start node) of a connection
-	int fromNode[200] = { -1 };
+	int fromNode[CONNECTIONSNUM] = { -1 };
 	// Contains the to node (goal node) of a connection
-	int toNode[200] = { -1 };
+	int toNode[CONNECTIONSNUM] = { -1 };
 	// Contains the cost of the connection
-	int connectionCost[200] = { -1 };
+	int connectionCost[CONNECTIONSNUM] = { -1 };
 	// Contains the cost plot position
 	// **NOTE: For the plot, might be easier to ignore later by capturing now
-	int costPlotPosition[200] = { -1 };
+	int costPlotPosition[CONNECTIONSNUM] = { -1 };
 	// Contains the type of terrain 
 	// **NOTE: For the plot, might be easier to ignore later by capturing now
-	int typeOfTerrain[200] = { -1 };
+	int typeOfTerrain[CONNECTIONSNUM] = { -1 };
 };
 
 // Includes the data for each node
 class Nodes {
 public:
 	// Contains the "N" character for nodes
-	string nodeChar[200] = { "" };
+	string nodeChar[NODESNUM] = { "" };
 	// Contains the node id 
-	int nodeNumber[200] = { -1 };
+	int nodeNumber[NODESNUM] = { -1 };
 	// Contains the node status of 1=unvisited, 2=open, or 3=closed
-	int nodeStatus[200] = { -1 };
+	int nodeStatus[NODESNUM] = { -1 };
 	// Contains the cost-so-far sum from the from node to the current node
-	int nodeCostSoFar[200] = { -1 };
+	int nodeCostSoFar[NODESNUM] = { -1 };
 	// Contains the estimated heuristics result from the euclidean distance formula
-	int estimatedHeuristics[200] = { -1 };
+	int estimatedHeuristics[NODESNUM] = { -1 };
 	// Contains the estimated total cost result from all open nodes
-	int estimatedTotal[200] = { -1 };
+	int estimatedTotal[NODESNUM] = { -1 };
 	// Contains the previous node in path 
-	int previousNode[200] = { -1 };
+	int previousNode[NODESNUM] = { -1 };
 	// Contains the x coordinates of the path
-	double xcoord[200] = { -1 };
+	double xcoord[NODESNUM] = { -1 };
 	// Contains the z coordinates of the path
-	double zcoord[200] = { -1 };
+	double zcoord[NODESNUM] = { -1 };
 	// Contains the number plot position
 	// **NOTE: For the plot, might be easier to ignore later by capturing now
-	int numberPlotPos[200] = { -1 };
+	int numberPlotPos[NODESNUM] = { -1 };
 	// Contains the name plot position 
-	int namePlotPos[200] = { -1 };
+	int namePlotPos[NODESNUM] = { -1 };
 	// Contains the name of the place the node references
-	string nodeName[200] = { "" };
+	string nodeName[NODESNUM] = { "" };
 	// 
-	int openNodes[200] = { UNDEFINED };
+	int openNodes[NODESNUM] = { UNDEFINED };
 };
 
 // Loop through the array of nodes, update the lowestTotal to hold
@@ -112,9 +114,9 @@ int findLowestOpenNode(Nodes *node)
 	int lowestOpenNode = INT_MAX;
 	int lowestTotal = INT_MAX;
 
-	for (int i = 0; i < 66; i++)
+	for (int i = 0; i < NODESNUM; i++)
 	{
-		if (node->nodeStatus[i] = OPEN && node->estimatedTotal[i] < lowestTotal)
+		if (node->nodeStatus[i] == OPEN && node->estimatedTotal[i] < lowestTotal)
 		{
 			lowestTotal = node->estimatedTotal[i];
 			lowestOpenNode = i;
@@ -158,11 +160,16 @@ int calculateDistanceBetweenNodes(Nodes *node, int node1, int node2)
 // Return: Int array
 int* getConnections(Connections *connection, Nodes *node, int currentNode, int result[8]) 
 {
+	int j = 0;
 	//int result[8] = { UNDEFINED };
-	for (int i = 0; i < 153; i++)
+	for (int i = 0; i < CONNECTIONSNUM; i++)
 	{
-		if (connection->fromNode[i] = node->nodeNumber[currentNode])
-			result[i] == connection->fromNode[i];
+		if (connection->fromNode[i] == node->nodeNumber[currentNode])
+		{
+			//result[j] = connection->fromNode[i];
+			result[j] = i + 1;
+			j++;
+		}
 	}
 	return result;
 }
@@ -185,10 +192,10 @@ int findPath(Connections *connection, Nodes *node, int startNode, int goalNode)
 	int toNode = -1;
 	int toCost = -1; 
 	
-	for (int i = 0; i < 66; i++)
+	for (int i = 0; i < NODESNUM; i++)
 	{
 		node->nodeStatus[i] = UNVISITED;
-		node->nodeCostSoFar[i] = INFINITY;
+		node->nodeCostSoFar[i] = INT_MAX;
 		node->previousNode[i] = UNDEFINED;
 	}
 
@@ -200,7 +207,7 @@ int findPath(Connections *connection, Nodes *node, int startNode, int goalNode)
 	node->openNodes[startNode];
 
 	// Check to see if there are any nodes set to open 
-	while (j < 66)
+	while (j < NODESNUM)
 	{
 		// If yes, set the counter to j 
 		if (node->nodeStatus[j] == OPEN)
@@ -228,7 +235,7 @@ int findPath(Connections *connection, Nodes *node, int startNode, int goalNode)
 		// Determine how many connections are in currentConnections
 		for (int x = 0; x < 8; x++)
 		{
-			if (currentConnections[x] != -1)
+			if (currentConnections[x] != 0)
 			{
 				counter2++;
 			}
@@ -261,9 +268,9 @@ int findPath(Connections *connection, Nodes *node, int startNode, int goalNode)
 // with A* algorithm
 // Param: 
 // Return:
-int *retrievePath(Nodes *node, int startNode, int goalNode)
+int *retrievePath(Nodes *node, int startNode, int goalNode, int path[20])
 {
-	int path[20] = { -1 };
+	// int path[20] = { -1 };
 	int current = goalNode;
 
 	while ((current != startNode) && (current != UNDEFINED))
@@ -274,6 +281,7 @@ int *retrievePath(Nodes *node, int startNode, int goalNode)
 	if (current == startNode)
 	{
 		path[startNode]; 
+		return path;
 	}
 	else
 	{
@@ -281,6 +289,7 @@ int *retrievePath(Nodes *node, int startNode, int goalNode)
 		while (i < 20)
 		{
 			path[i] = -1;
+			i++;
 		}
 	}
 	return path;
@@ -291,6 +300,8 @@ int main()
 	// Create an instance of connection 
 	Connections* connection = new Connections();
 	Nodes* node = new Nodes();
+	int path[20] = { -1 };
+
 
 	// Create a text string for line input
 	string line;
@@ -308,7 +319,7 @@ int main()
 
 	// Create and populate the CSV textfile
 	ofstream outfile;
-	outfile.open("CS 330, Astar Connections Output.txt");
+	outfile.open("CS 330, Pathfinding AB, Output.txt");
 
 	// Set the iterator to 0 for index element
 	int i = 0;
@@ -389,7 +400,7 @@ int main()
 		i++;
 	}
 
-	while (j<200) {
+	while (j<CONNECTIONSNUM) {
 		outfile << connection->connectionChar[j] << ","
 			<< connection->connectionNumber[j] << ","
 			<< connection->fromNode[j] << ","
@@ -400,6 +411,8 @@ int main()
 			<< endl;
 		j++;
 	}
+
+	cout << endl << endl;
 
 	// Close the connections input file
 	infile.close();
@@ -505,8 +518,8 @@ int main()
 		i++;
 	}
 
-	while (j<200) {
-		cout << node->nodeChar[j] << ","
+	while (j< NODESNUM) {
+		outfile << node->nodeChar[j] << ","
 			<< node->nodeNumber[j] << ","
 			<< node->nodeStatus[j] << ","
 			<< node->nodeCostSoFar[j] << ","
@@ -522,11 +535,24 @@ int main()
 		j++;
 	}
 
+	// path 1
+	findPath(connection, node, 1, 23);
+	retrievePath(node, 1, 23, path);
+
+	outfile << endl << "From node: 1; To node: 23 " << endl; 
+	for (int z=0; z < 20; z++) 
+	{
+		outfile << path[z] << " " << endl;
+	} 
+
+	outfile << "Total cost: " << node->nodeCostSoFar[23] << endl;
+
+
+
 	infile2.close();
 	outfile.close();
 
-	//findPath(*connection, *node, 1, 5);
-	//system("pause");
+	system("pause");
 
 	return 0;
 }
