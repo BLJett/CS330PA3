@@ -185,7 +185,10 @@ vector<int> getConnections(Connections *connection, int currentNode)
 int findPath(Connections *connection, Nodes *node, int startNode, int goalNode)
 {
 	vector <int> openNodes; 
+	vector <int> currentConnections;
 	int currentNode = UNDEFINED;
+	int toNode = UNDEFINED; 
+	int toCost = UNDEFINED; 
 
 	for (int i = 0; i < NODESNUM; i++)
 	{
@@ -202,6 +205,29 @@ int findPath(Connections *connection, Nodes *node, int startNode, int goalNode)
 	while (openNodes.size() > 0)
 	{
 		currentNode = findLowestOpenNode(node, openNodes);
+		if (currentNode == goalNode)
+			break;
+
+		currentConnections = getConnections(connection, currentNode);
+
+		for (int i = 0; i < currentConnections.size(); i++)
+		{
+			toNode = connection->toNode[currentConnections.operator[](i)];
+			toCost = connection->connectionCost[currentConnections.operator[](i)]; 
+
+			if (toCost < node->nodeCostSoFar[toNode])
+			{
+				node->nodeStatus[toNode] = OPEN;
+				node->nodeCostSoFar[toNode] = toCost;
+				node->estimatedHeuristics[toNode] = calculateDistanceBetweenNodes(node, toNode, goalNode);
+				node->estimatedTotal[toNode] = node->nodeCostSoFar[toNode] + node->estimatedHeuristics[toNode];
+				node->previousNode[toNode] = currentNode; 
+				openNodes.push_back(toNode);
+			}
+		}
+		node->nodeStatus[currentNode] = CLOSED;
+		vector<int>::iterator it = std::find(openNodes.begin(), openNodes.end(), currentNode);
+		openNodes.erase(it);
 	}
 
 	return 0;
@@ -211,29 +237,24 @@ int findPath(Connections *connection, Nodes *node, int startNode, int goalNode)
 // with A* algorithm
 // Param: 
 // Return:
-int *retrievePath(Nodes *node, int startNode, int goalNode, int path[20])
+vector <int> retrievePath(Nodes *node, int startNode, int goalNode)
 {
-	// int path[20] = { -1 };
+	vector <int> path; 
 	int current = goalNode;
 
 	while ((current != startNode) && (current != UNDEFINED))
 	{
-		path[current];
+		path.push_back(current);
 		current = node->previousNode[current];
 	}
 	if (current == startNode)
 	{
-		path[startNode]; 
+		path.push_back(startNode); 
 		return path;
 	}
 	else
 	{
-		int i = 0;
-		while (i < 20)
-		{
-			path[i] = -1;
-			i++;
-		}
+		path.clear();
 	}
 	return path;
 }
