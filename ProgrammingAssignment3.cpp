@@ -154,15 +154,15 @@ int calculateDistanceBetweenNodes(Nodes *node, int node1, int node2)
 
 // Finds and returns a list of all outgoing connections
 // from the given node.
-// Params: Connection and node 
-// Return: Int array parameter
-float* getConnections(Connections connection, Nodes currentNode)
+// Params: Connection, Node, int
+// Return: Int array
+int* getConnections(Connections *connection, Nodes *node, int currentNode, int result[8]) 
 {
-	float result[8] = { UNDEFINED };
+	//int result[8] = { UNDEFINED };
 	for (int i = 0; i < 153; i++)
 	{
-		if (connection.fromNode == currentNode.nodeNumber)
-			result[i] == connection.fromNode[i];
+		if (connection->fromNode[i] = node->nodeNumber[currentNode])
+			result[i] == connection->fromNode[i];
 	}
 	return result;
 }
@@ -170,11 +170,120 @@ float* getConnections(Connections connection, Nodes currentNode)
 // Find path from start to end node by initializing a start node, finding
 // all outgoing connections, picking the lowest outgoing connection and taking it.
 // We return an updated version of the graph 
-// Params: none
-// Return: object???
-int findPath()
+// Params: connection object, node object, start node, goal note
+// Return: updated graph? (connections and nodes)
+int findPath(Connections *connection, Nodes *node, int startNode, int goalNode)
 {
+	// Setting the initial values unvisited, infinity, and undefined to status,
+	// cost so far, and previous; setting the iterator
+	int j = 0; 
+	int k = 0; 
+	int counter = 0;
+	int counter2 = 0;
+	int currentNode = UNDEFINED;
+	int currentConnections[8] = { -1 }; 
+	int toNode = -1;
+	int toCost = -1; 
+	
+	for (int i = 0; i < 66; i++)
+	{
+		node->nodeStatus[i] = UNVISITED;
+		node->nodeCostSoFar[i] = INFINITY;
+		node->previousNode[i] = UNDEFINED;
+	}
+
+	// Initialize the start node as open 
+	node->nodeStatus[startNode] = OPEN;
+	node->nodeCostSoFar[startNode] = 0;
+	
+	// Set the first element of the array to the start node
+	node->openNodes[startNode];
+
+	// Check to see if there are any nodes set to open 
+	while (j < 66)
+	{
+		// If yes, set the counter to j 
+		if (node->nodeStatus[j] == OPEN)
+		{
+			counter++;
+		}
+		j++;
+	}
+
+	// Use j to see how many nodes are open and iterate to that number
+	while (k < counter)
+	{
+		currentNode = findLowestOpenNode(node);
+
+		// If our current node is our goal node main loop is complete
+		if (currentNode == goalNode)
+			break;
+		
+		// Pass current connections into get connections to update the array
+		getConnections(connection, node, currentNode, currentConnections);
+
+		// Increment for next iteration
+		k++;
+
+		// Determine how many connections are in currentConnections
+		for (int x = 0; x < 8; x++)
+		{
+			if (currentConnections[x] != -1)
+			{
+				counter2++;
+			}
+		}
+
+		// Execute once for every connection in the currentConnections
+		for (int y = 0; y < counter2; y++)
+		{
+			toNode = connection->toNode[currentConnections[y]];
+			toCost = node->nodeCostSoFar[currentNode] + connection->connectionCost[currentConnections[y]];
+			if (toCost < node->nodeCostSoFar[toNode])
+			{
+				node->nodeStatus[toNode] = OPEN;
+				node->nodeCostSoFar[toNode] = toCost;
+				node->estimatedHeuristics[toNode] = calculateDistanceBetweenNodes(node, toNode, goalNode);
+				node->estimatedTotal[toNode] = node->nodeCostSoFar[toNode] + node->estimatedHeuristics[toNode];
+				node->previousNode[toNode] = currentNode;
+				node->openNodes[toNode] = OPEN;
+			}
+		}
+
+		node->nodeStatus[currentNode] = CLOSED;
+		node->openNodes[currentNode] = CLOSED;
+	}
+
 	return 0;
+}
+
+// Retrieve path from start node to end node
+// with A* algorithm
+// Param: 
+// Return:
+int *retrievePath(Nodes *node, int startNode, int goalNode)
+{
+	int path[20] = { -1 };
+	int current = goalNode;
+
+	while ((current != startNode) && (current != UNDEFINED))
+	{
+		path[current];
+		current = node->previousNode[current];
+	}
+	if (current == startNode)
+	{
+		path[startNode]; 
+	}
+	else
+	{
+		int i = 0;
+		while (i < 20)
+		{
+			path[i] = -1;
+		}
+	}
+	return path;
 }
 
 int main()
@@ -333,7 +442,7 @@ int main()
 
 		// Change the string into an int for the node number
 		node->nodeNumber[i] = stoi(temporary);
-
+		
 		// Retrieve the node status column element as a string
 		getline(linestream, temporary, ',');
 
@@ -415,14 +524,9 @@ int main()
 
 	infile2.close();
 	outfile.close();
+
+	//findPath(*connection, *node, 1, 5);
 	//system("pause");
-
-	cout << endl << endl;
-
-	double testThingy = calculateDistanceBetweenNodes(node, 7, 8);
-	cout << testThingy << endl;
-
-	system("pause");
 
 	return 0;
 }
