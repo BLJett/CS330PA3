@@ -135,10 +135,10 @@ int findLowestOpenNode(Nodes *node, vector <int> openNodesVector)
 // Return: double, distance between the two nodes
 double calculateDistanceBetweenNodes(Nodes *node, int node1, int node2)
 {
-	int xCoordNode2 = node->xcoord[node2-1];
-	int xCoordNode1 = node->xcoord[node1-1];
-	int zCoordNode2 = node->zcoord[node2-1];
-	int zCoordNode1 = node->zcoord[node1-1];
+	int xCoordNode2 = node->xcoord[node2];
+	int xCoordNode1 = node->xcoord[node1];
+	int zCoordNode2 = node->zcoord[node2];
+	int zCoordNode1 = node->zcoord[node1];
 
 
 	//double distance = sqrt((node->xcoord[node2] - node->xcoord[node1]) ^ 2 +
@@ -195,9 +195,9 @@ int findPath(Connections *connection, Nodes *node, int startNode, int goalNode)
 	}
 
 	// Initialize the start node as open 
-	node->nodeStatus[startNode-1] = OPEN;
-	node->nodeCostSoFar[startNode-1] = 0;
-	openNodes.push_back(startNode-1);
+	node->nodeStatus[startNode] = OPEN;
+	node->nodeCostSoFar[startNode] = 0;
+	openNodes.push_back(startNode);
 
 	while (openNodes.size() > 0)
 	{
@@ -485,23 +485,23 @@ int main()
 	
 	
 	// referencing node number 2, 8, 10 
-	node->nodeStatus[1] = 2;
-	node->nodeStatus[7] = 2;
-	node->nodeStatus[9] = 2;
+	node->nodeStatus[2] = 2;
+	node->nodeStatus[8] = 2;
+	node->nodeStatus[10] = 2;
 
-	node->estimatedTotal[1] = 200;
-	node->estimatedTotal[7] = 10;
-	node->estimatedTotal[9] = 400;
+	node->estimatedTotal[2] = 200;
+	node->estimatedTotal[8] = 10;
+	node->estimatedTotal[10] = 400;
 
 	vector <int> openNodeIndex;
 
-	openNodeIndex.push_back(1);
-	openNodeIndex.push_back(7);
-	openNodeIndex.push_back(9);
+	openNodeIndex.push_back(2);
+	openNodeIndex.push_back(8);
+	openNodeIndex.push_back(10);
 
 	// result is from 2, 8, 10
 	cout << findLowestOpenNode(node, openNodeIndex) << endl;
-	cout << calculateDistanceBetweenNodes(node, 2, 8) << endl;
+	cout << calculateDistanceBetweenNodes(node, 1, 7) << endl;
 
 	vector <int> connectionResult = getConnections(connection, 47);
 
@@ -510,7 +510,7 @@ int main()
 		cout << connectionResult.operator[](i) << endl;
 	}
 
-	cout << findPath(connection, node, 1, 2);
+	// cout << findPath(connection, node, 1, 2);
 
 	infile2.close();
 	outfile.close();
