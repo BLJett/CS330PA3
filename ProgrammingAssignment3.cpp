@@ -547,7 +547,7 @@ int main()
 
 	outfile << "Total cost: " << node->nodeCostSoFar[23] << endl;
 
-
+	outfile << "Brandon Jett and Sierra Laney " << endl << "CS 330-01" << endl;
 
 	infile2.close();
 	outfile.close();
