@@ -102,16 +102,13 @@ public:
 	int namePlotPos[NODESNUM] = { -1 };
 	// Contains the name of the place the node references
 	string nodeName[NODESNUM] = { "" };
-	// 
-	int openNodes[NODESNUM] = { UNDEFINED };
-	//
 };
 
 // Loop through the array of nodes, update the lowestTotal to hold
 // the lowest cost node so far until we find the lowest cost open
 // node in the array of nodes.
-// Params: Nodes node
-// Return: int, element of lowest cost node with lowest index
+// Params: pointer to node object, vector of open nodes
+// Return: int, lowest index of the lowest total cost node
 int findLowestOpenNode(Nodes *node, vector <int> openNodesVector)
 {
 	int lowestTotalCost = INT_MAX;
@@ -131,7 +128,7 @@ int findLowestOpenNode(Nodes *node, vector <int> openNodesVector)
 
 // Calculates the heuristic (in our case) the 
 // Euclidean distance between two given nodes
-// Params: pointer to a node object and the elements of the two nodes
+// Params: pointer to a node object, two ints that are the nodeNumber of 2 nodes
 // Return: double, distance between the two nodes
 double calculateDistanceBetweenNodes(Nodes *node, int node1, int node2)
 {
@@ -140,9 +137,6 @@ double calculateDistanceBetweenNodes(Nodes *node, int node1, int node2)
 	int zCoordNode2 = node->zcoord[node2];
 	int zCoordNode1 = node->zcoord[node1];
 
-
-	//double distance = sqrt((node->xcoord[node2] - node->xcoord[node1]) ^ 2 +
-	//	(node->zcoord[node2] - node->zcoord[node1]) ^ 2);
 	double distance = 0;
 	int distance1 = 0;
 	int distance2 = 0;
@@ -160,8 +154,9 @@ double calculateDistanceBetweenNodes(Nodes *node, int node1, int node2)
 
 // Finds and returns a list of all outgoing connections
 // from the given node.
-// Params: Connection, Node, int
-// Return: Int array
+// Params: pointer to connection object, int of the current node 
+// Return: vector of integers that are connections to a node such that the
+// from node matches current node
 
 vector<int> getConnections(Connections *connection, int currentNode)
 {
@@ -179,9 +174,9 @@ vector<int> getConnections(Connections *connection, int currentNode)
 
 // Find path from start to end node by initializing a start node, finding
 // all outgoing connections, picking the lowest outgoing connection and taking it.
-// We return an updated version of the graph 
-// Params: connection object, node object, start node, goal note
-// Return: updated graph? (connections and nodes)
+// We update connections and nodes when necessary 
+// Params: pointer to connection object, pointer to node object, an int start node, an int goal note
+// Return: the value 0 to show it executed correctly 
 int findPath(Connections *connection, Nodes *node, int startNode, int goalNode)
 {
 	vector <int> openNodes;
@@ -222,8 +217,6 @@ int findPath(Connections *connection, Nodes *node, int startNode, int goalNode)
 				node->estimatedHeuristics[toNode] = calculateDistanceBetweenNodes(node, toNode, goalNode);
 				node->estimatedTotal[toNode] = node->nodeCostSoFar[toNode] + node->estimatedHeuristics[toNode];
 				node->previousNode[toNode] = currentNode;
-				//cout << "Sup" << endl; //delete
-				//cout << node->previousNode[toNode]; //delete
 				openNodes.push_back(toNode);
 			}
 		}
@@ -231,15 +224,14 @@ int findPath(Connections *connection, Nodes *node, int startNode, int goalNode)
 		vector<int>::iterator it = std::find(openNodes.begin(), openNodes.end(), currentNode);
 		openNodes.erase(it);
 	}
-	
 
 	return 0;
 }
 
 // Retrieve path from start node to end node
 // with A* algorithm
-// Param: 
-// Return:
+// Param: pointer to nodes object, int of a start node, int of a goal node
+// Return: vector of integers of the correct path taken
 vector <int> retrievePath(Nodes *node, int startNode, int goalNode)
 {
 	vector <int> path;
@@ -265,7 +257,8 @@ vector <int> retrievePath(Nodes *node, int startNode, int goalNode)
 
 int main()
 {
-	// Create an instance of connection 
+
+	// Create an instance of connection, nodes, and vector to store path
 	Connections* connection = new Connections();
 	Nodes* node = new Nodes();
 	vector<int>path;
@@ -288,6 +281,10 @@ int main()
 	// Create and populate the CSV textfile
 	ofstream outfile;
 	outfile.open("CS 330, Pathfinding AB, Output.txt");
+
+	// Outfile contains the requirement of our names and section
+	outfile << "Names: Brandon Luke Jett & Sierra Laney" << endl;
+	outfile << "Class section: CS330-1" << endl << endl;
 
 	// Set the iterator to 0 for index element
 	int i = 0;
@@ -371,11 +368,14 @@ int main()
 		i++;
 	}
 
+	// Outfile meets requirements of printing the connections after loaded
+	outfile << "Connection input data: " << endl;
+
 	while (j<CONNECTIONSNUM) {
 		outfile << connection->connectionChar[j] << ","
-			<< connection->connectionNumber[j] << ","
-			<< connection->fromNode[j] << ","
-			<< connection->toNode[j] << ","
+			<< connection->connectionNumber[j] +1 << ","
+			<< connection->fromNode[j]+1 << ","
+			<< connection->toNode[j]+1 << ","
 			<< connection->connectionCost[j] << ","
 			<< connection->costPlotPosition[j] << ","
 			<< connection->typeOfTerrain[j]
@@ -383,7 +383,7 @@ int main()
 		j++;
 	}
 
-	cout << endl << endl;
+	outfile << endl;
 
 	// Close the connections input file
 	infile.close();
@@ -491,9 +491,12 @@ int main()
 		i++;
 	}
 
+	// Outfile completes requirement by printing nodes after loaded
+	outfile << "Node input data: " << endl;
+
 	while (j< NODESNUM) {
 		outfile << node->nodeChar[j] << ","
-			<< node->nodeNumber[j] << ","
+			<< node->nodeNumber[j]+1 << ","
 			<< node->nodeStatus[j] << ","
 			<< node->nodeCostSoFar[j] << ","
 			<< node->estimatedHeuristics[j] << ","
@@ -509,51 +512,86 @@ int main()
 	}
 
 	infile2.close();
-	outfile.close();
+
+	outfile << endl;
+
+	// Call to find path to retrieve nodes path of path 1
+	// Print the path in ascending order from from node to to node
+	// Print total path cost 
+	outfile << "Path 1: From node 1 to node 23" << endl;
 
 	findPath(connection, node, 0, 22);
 	path = retrievePath(node, 0, 22);
-	cout << endl << endl;
-	for (i = 0; i < path.size(); i++)
+	for (i = path.size()-1; i >= 0; i--)
 	{
-		cout << path.operator[](i) + 1 << " ";
+		outfile << path.operator[](i) + 1 << " ";
 	}
+	outfile << endl;
+	outfile << "Total cost of the path: " << node->estimatedTotal[22] << endl;
+	outfile << endl;
 
+	// Call to find path to retrieve nodes path of path 2
+	// Print the path in ascending order from from node to to node
+	// Print total path cost 
+	outfile << "Path 2: From node 1 to node 59" << endl;
+		 
 	findPath(connection, node, 0, 58);
 	path = retrievePath(node, 0, 58);
-	cout << endl << endl;
-	for (i = 0; i < path.size(); i++)
+	for (i = path.size() - 1; i >= 0; i--)
 	{
-		cout << path.operator[](i) + 1 << " ";
+		outfile << path.operator[](i) + 1 << " ";
 	}
+	outfile << endl;
+	outfile << "Total cost of the path: " << node->estimatedTotal[58] << endl;
+	outfile << endl;
+
+	// Call to find path to retrieve nodes path of path 3
+	// Print the path in ascending order from from node to to node
+	// Print total path cost 
+	outfile << "Path 3: From node 8 to node 58" << endl;
 
 	findPath(connection, node, 7, 57);
 	path = retrievePath(node, 7, 57);
-	cout << endl << endl;
-	for (i = 0; i < path.size(); i++)
+	for (i = path.size() - 1; i >= 0; i--)
 	{
-		cout << path.operator[](i) + 1 << " ";
+		outfile << path.operator[](i) + 1 << " ";
 	}
+	outfile << endl;
+	outfile << "Total cost of the path: " << node->estimatedTotal[57] << endl;
+	outfile << endl;
+
+	// Call to find path to retrieve nodes path of path 4
+	// Print the path in ascending order from from node to to node
+	// Print total path cost 
+	outfile << "Path 4: From node 9 to 65" << endl; 
 
 	findPath(connection, node, 8, 64);
 	path = retrievePath(node, 8, 64);
-	cout << endl << endl;
-	for (i = 0; i < path.size(); i++)
+	for (i = path.size() - 1; i >= 0; i--)
 	{
-		cout << path.operator[](i) + 1 << " ";
+		outfile << path.operator[](i) + 1 << " ";
 	}
+	outfile << endl;
+	outfile << "Total cost of the path: " << node->estimatedTotal[64] << endl;
+	outfile << endl;
+
+	// Call to find path to retrieve nodes path of path 5
+	// Print the path in ascending order from from node to to node
+	// Print total path cost 
+	outfile << "Path 5: From node to 27 to 33" << endl;
 
 	findPath(connection, node, 26, 32);
 	path = retrievePath(node, 26, 32);
-	cout << endl << endl;
-
-	for (i = 0; i < path.size(); i++)
+	for (i = path.size() - 1; i >= 0; i--)
 	{
-		cout << path.operator[](i) + 1 << " ";
+		outfile << path.operator[](i) + 1 << " ";
 	}
-	
+	outfile << endl;
+	outfile << "Total cost of the path: " << node->estimatedTotal[32] << endl;
+	outfile << endl;
 
+	// Pause screen and close outfile
 	system("pause");
-
+	outfile.close();
 	return 0;
 }
